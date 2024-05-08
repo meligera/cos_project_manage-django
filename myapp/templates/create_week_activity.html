@@ -1,0 +1,31 @@
+{% load static %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#id_year').on('change', function() {
+            var year = $(this).val();
+            $.ajax({
+                url: '{% url "get_week_choices" %}',
+                data: {
+                    'year': year
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var weekChoices = data.choices;
+                    var weekSelect = $('#id_week_number');
+                    weekSelect.empty();
+                    $.each(weekChoices, function(index, choice) {
+                        weekSelect.append($('<option></option>').attr('value', choice[0]).text(choice[1]));
+                    });
+                }
+            });
+        });
+    });
+</script>
